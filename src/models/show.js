@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       Show.belongsTo(models.Auditorium,{
         foreignKey: 'audiId'
       })
+
+      Show.hasMany(models.ShowSeat,{
+        foreignKey: 'showId'
+      })
     }
   }
   Show.init({
