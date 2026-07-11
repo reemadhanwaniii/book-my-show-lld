@@ -2,48 +2,43 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ShowSeats', {
+    await queryInterface.createTable('Tickets', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      showSeatStatus: {
+      amount: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      status: {
         type: Sequelize.ENUM(
-          'AVAILABLE',
           'BOOKED',
-          'BLOCKED',
-          'LOCKED'
+          'CANCELLED',
+          'PENDING'
         ),
         allowNull: false
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       showId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-            model: 'Shows',
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
 
-      seatId: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-              model: 'Seats',
-              key: 'id'
-          },
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-      },
-      ticketId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          model: 'Ticket',
+          model: 'Shows',
           key: 'id'
         },
 
@@ -61,6 +56,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ShowSeats');
+    await queryInterface.dropTable('Tickets');
   }
 };

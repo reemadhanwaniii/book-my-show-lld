@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       ShowSeat.belongsTo(models.Seat,{
         foreignKey: 'seatId'
       })
+
+      ShowSeat.belongsTo(models.Ticket,{
+        foreignKey: 'ticketId'
+      })
     }
   }
   ShowSeat.init({

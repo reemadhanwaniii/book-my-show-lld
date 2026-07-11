@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       Show.hasMany(models.ShowSeat,{
         foreignKey: 'showId'
       })
+
+      Show.hasMany(models.Ticket,{
+        foreignKey: 'showId'
+      })
     }
   }
   Show.init({
