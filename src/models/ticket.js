@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     status: {
-      tyep: DataTypes.ENUM(
+      type: DataTypes.ENUM(
         'BOOKED',
         'CANCELLED',
         'PENDING'

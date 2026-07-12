@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     audiId: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {

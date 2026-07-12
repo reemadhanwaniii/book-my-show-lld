@@ -35,11 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     showId : {
-      type: DataTypes.Integer,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     seatId : {
-      type: DataTypes.Integer,
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
