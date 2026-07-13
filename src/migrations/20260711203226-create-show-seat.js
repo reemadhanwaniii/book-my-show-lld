@@ -41,9 +41,9 @@ module.exports = {
       },
       ticketId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-          model: 'Ticket',
+          model: 'Tickets',
           key: 'id'
         },
 

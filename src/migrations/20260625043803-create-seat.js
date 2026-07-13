@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       seatNo: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
@@ -36,7 +36,7 @@ module.exports = {
         allowNull: false,
 
         references: {
-            model: 'Auditorium',
+            model: 'Auditoria',
             key: 'id'
         },
 

@@ -17,17 +17,15 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       },
-      theatreId: {
+      movieId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-
         references: {
           model: 'Movies',
           key: 'id'
         },
-
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       audiId : {
         type: Sequelize.INTEGER,

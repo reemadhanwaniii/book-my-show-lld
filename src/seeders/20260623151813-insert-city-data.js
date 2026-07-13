@@ -37,7 +37,17 @@ module.exports = {
     name: 'Pune',
     createdAt: now,
     updatedAt: now
-   }
+   },
+   {
+    name: 'C1',
+    createdAt: new Date(),
+    updatedAt: new Date()
+   },
+   {
+    name: 'C2',
+    createdAt: new Date(),
+    updatedAt: new Date()
+    }
   ])
   },
 
