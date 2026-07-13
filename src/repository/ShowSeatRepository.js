@@ -9,6 +9,10 @@ class ShowSeatRepository extends CrudRepository{
    async findAllByShowId(showId) {
 
    }
+
+   async findAllByShowIdAndSeatIdIn(showId,seatIds) {
+
+   }
 }
 
 module.exports = ShowSeatRepository;

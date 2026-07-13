@@ -1,24 +1,59 @@
+const CacheService = require("./CacheService");
+const { ShowSeatRepository } = require("../repository/index");
+const cacheService = new CacheService();
+const showSeatRepository = new ShowSeatRepository();
+
+
 class BookingService {
     /**
      * book a seat
      * show all seats
      */
 
-    async blockSeats(showId,seatId) {
+    async blockSeats(showId,seatIds,userId) {
+        console.log("Printing Cache before logic");
+        console.log(cacheService.getAllKeysAndValues());
+        // 1. we will first check if the seats are available or not
+        // 1.a - check if the seats are not booked already 
+
+        const showSeats = showSeatRepository.findAllByShowIdAndSeatIdIn(showId,seatIds);
+        console.log("Printing show seats");
+        showSeats.forEach((seat) => {
+            console.log(seat.id,seat.showSeatStatus);
+        });
+
+        for(const seat of showSeats) {
+            if(seat.showSeatStatus == 'BOOKED') return false;
+        }
+        // 1.b - check if the seats are locked in redis already
+
+        for(const seat of showSeats) {
+            const user = await cacheService.get(`showSeat: ${seat.id}`);
+
+            if(user != null) return false;
+        }
+
+
+
+        // 2. if all the seats are available then we will block the seats in redis
+        // (seatId - userId)
+
+        for(const seat of showSeats) {
+            await cacheService.save(`seatId-${seat.id}`,`userId-${user.id}`);
+        }
+
+        console.log("printing cache after logic");
+        console.log(await cacheService.getAllKeysAndValues());
+
+        return true;
+    }
+
+    async bookTicket(showId,seatIds,userId) {
 
     }
 }
 
 
 /**
- * the issue with blockSeats function is let say we have to book 5 seats,
- * them we have to call this function 5 times
- * Assume this blocking is happening directly on database
- * let say we have to lock 5 seats we have to make 5 queris on db(pessimistic locking)
- * then using those 5 queries we are seperately creating lock that is very bad sceanrio to go for
- * 
- * 
- * n+1 problem (read about it)
- * 
- * type of show id here is long
+ * instead of long we use list of seatIds, we will try to batch things in certain way
  */

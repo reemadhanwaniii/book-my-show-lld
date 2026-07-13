@@ -33,6 +33,21 @@ class CacheService {
             throw {error};
         }
     }
+
+    async getAllKeysAndValues() {
+          try {
+            const keys = await connectRedis.keys('*');
+            const result = {};
+            for (const key of keys) {
+                const value = await connectRedis.get(key);
+                result[key] = value;
+            }
+            return result;
+        } catch (error) {
+            console.log("Something went while saving data in redis");
+            throw {error};
+        }
+    }
 }
 
 
