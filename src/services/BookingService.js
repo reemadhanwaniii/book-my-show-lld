@@ -12,11 +12,11 @@ class BookingService {
 
     async blockSeats(showId,seatIds,userId) {
         console.log("Printing Cache before logic");
-        console.log(cacheService.getAllKeysAndValues());
+        console.log(await cacheService.getAllKeysAndValues());
         // 1. we will first check if the seats are available or not
         // 1.a - check if the seats are not booked already 
 
-        const showSeats = showSeatRepository.findAllByShowIdAndSeatIdIn(showId,seatIds);
+        const showSeats = await showSeatRepository.findAllByShowIdAndSeatIdIn(showId,seatIds);
         console.log("Printing show seats");
         showSeats.forEach((seat) => {
             console.log(seat.id,seat.showSeatStatus);
@@ -54,6 +54,4 @@ class BookingService {
 }
 
 
-/**
- * instead of long we use list of seatIds, we will try to batch things in certain way
- */
+module.exports = BookingService;

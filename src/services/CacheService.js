@@ -1,10 +1,10 @@
-const {connectRedis} = require("../config/RedisConfig");
+const {redisClient} = require("../config/RedisConfig");
 
 class CacheService {
     // save get delete
     async save(key,value) {
         try {
-            await connectRedis.set(key,value,{
+            await redisClient.set(key,value,{
                 EX: 500
             });
             // await connectRedis.setX(key,500,value)
@@ -17,7 +17,7 @@ class CacheService {
 
     async delete(key) {
         try {
-            await connectRedis.del(key);
+            await redisClient.del(key);
             console(`Deleted key: ${key}`);
         } catch (error) {
             console.log("Something went while saving data in redis");
@@ -27,7 +27,7 @@ class CacheService {
 
     async get(key) {
         try {
-            return await connectRedis.get(key);
+            return await redisClient.get(key);
         } catch (error) {
             console.log("Something went while saving data in redis");
             throw {error};
@@ -36,10 +36,10 @@ class CacheService {
 
     async getAllKeysAndValues() {
           try {
-            const keys = await connectRedis.keys('*');
+            const keys = await redisClient.keys('*');
             const result = {};
             for (const key of keys) {
-                const value = await connectRedis.get(key);
+                const value = await redisClient.get(key);
                 result[key] = value;
             }
             return result;
