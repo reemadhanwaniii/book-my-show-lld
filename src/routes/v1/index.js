@@ -7,5 +7,7 @@ router.get('/movie',MovieController.getAll);
 router.get('/movie/:id',MovieController.get);
 
 router.post('/block',BookingController.blockSeats);
+router.delete("/",BookingController.clearAllSeatLocks);
+router.post("/confirm",BookingController.bookSeats);
 
 module.exports = router;
