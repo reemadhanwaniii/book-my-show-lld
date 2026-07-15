@@ -23,6 +23,22 @@ class ShowSeatRepository extends CrudRepository{
                     }
                 });
    }
+
+   async updateShowSeatsBulk(ids,ticketId) {
+      return await ShowSeat.update(
+        {
+            ticketId: ticketId,
+            showSeatStatus: "BOOKED"
+        },
+        {
+            where: {
+                id: {
+                    [Op.in]: ids
+                }
+            }
+        }
+     );
+   }
 }
 
 module.exports = ShowSeatRepository;

@@ -1,8 +1,8 @@
 const CacheService = require("./CacheService");
-const { ShowSeatRepository } = require("../repository/index");
+const { ShowSeatRepository,TicketRepository } = require("../repository/index");
 const cacheService = new CacheService();
 const showSeatRepository = new ShowSeatRepository();
-
+const ticketRepository = new TicketRepository();
 
 class BookingService {
     /**
@@ -39,7 +39,20 @@ class BookingService {
         // (seatId - userId)
 
         for(const seat of showSeats) {
-            await cacheService.save(`seatId-${seat.id}`,`userId-${user.id}`);
+            // await cacheService.save(`seatId-${seat.id}`,`userId-${user.id}`);
+
+            try {
+                console.log("Saving seat:", seat.id);
+
+                await cacheService.save(
+                    `seatId-${seat.id}`,
+                    `userId-${userId}`
+                );
+
+                console.log("Saved successfully");
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         console.log("printing cache after logic");
@@ -49,7 +62,17 @@ class BookingService {
     }
 
     async bookTicket(showId,seatIds,userId) {
+        // 1. in redis check if the user has lock for all the seats that they are trying to book
+        // 2. if the use has lock for all the seats then we will book the seats
+        // 3. create a new ticket
+        // 2.a go to all the rows of show_seats and update status to booked in one query
+        // 2.b update ticket id also
+    }
 
+    async createTicketAndBookedSeats(showId,seatIds,userId) {
+        // create a new Ticket
+        // set amount should be calculated
+        // fetch user ,set user
     }
 }
 
