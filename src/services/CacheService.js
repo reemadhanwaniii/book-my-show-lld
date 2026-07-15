@@ -48,6 +48,10 @@ class CacheService {
             throw {error};
         }
     }
+
+    async deleteAll() {
+        await redisClient.flushAll();
+    }
 }
 
 

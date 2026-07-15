@@ -1,8 +1,12 @@
 const CacheService = require("./CacheService");
-const { ShowSeatRepository,TicketRepository } = require("../repository/index");
+const { ShowSeatRepository,TicketRepository, UserRepository, ShowRepository } = require("../repository/index");
+const { redisClient } = require("../config/RedisConfig");
+const { sequelize } = require("../models");
 const cacheService = new CacheService();
 const showSeatRepository = new ShowSeatRepository();
 const ticketRepository = new TicketRepository();
+const userRepository = new UserRepository();
+const showRepository = new ShowRepository();
 
 class BookingService {
     /**
@@ -62,17 +66,55 @@ class BookingService {
     }
 
     async bookTicket(showId,seatIds,userId) {
-        // 1. in redis check if the user has lock for all the seats that they are trying to book
-        // 2. if the use has lock for all the seats then we will book the seats
-        // 3. create a new ticket
-        // 2.a go to all the rows of show_seats and update status to booked in one query
-        // 2.b update ticket id also
+        // 1. Check Redis lock for every seat
+        for(const seatId of seatIds) {
+            const status = await cacheService.get(`seatId-${seatId}-userId-${userId}`);
+            console.log(
+                `status: ${status} seatId: ${seatId} userId: ${userId}`
+            );
+
+            if(status == null) {
+                return null;
+            }
+        }
+
+        console.log("All seats available");
+        // 2. Fetch User & Show
+        const user = await userRepository.get(userId);
+        const show = await showRepository.get(showId);
+
+
+        // 3. Create ticket & update seats
+        const ticket = await this.createTicketAndBookedSeats(showId,seatIds,userId);
+        console.log("Ticket created");
+        return ticket;
+
     }
 
-    async createTicketAndBookedSeats(showId,seatIds,userId) {
-        // create a new Ticket
-        // set amount should be calculated
-        // fetch user ,set user
+    async createTicketAndBookedSeats(show,seatIds,user) {
+        const transaction = await sequelize.transaction();
+
+        try {
+            const ticket = await ticketRepository.create({
+                userId: user.id,
+                showId: show.id,
+                status: "BOOKED",
+                amount: 1000
+            },transaction);
+
+            // update all showSeats
+            await showSeatRepository.updateShowSeatsBulk(seatIds,ticket.id,transaction);
+
+            await transaction.commit();
+            return ticket;
+        } catch (error) {
+            await transaction.rollback();
+            throw {error};
+        }
+    }
+
+    async clearAllSeatLocks() {
+        await cacheService.deleteAll();
     }
 }
 
