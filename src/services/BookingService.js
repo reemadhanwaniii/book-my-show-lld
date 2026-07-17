@@ -49,8 +49,8 @@ class BookingService {
                 console.log("Saving seat:", seat.id);
 
                 await cacheService.save(
-                    `seatId-${seat.id}`,
-                    `userId-${userId}`
+                    `seatId-${seat.id}-userId-${userId}`,
+                    "LOCKED"
                 );
 
                 console.log("Saved successfully");
@@ -96,8 +96,8 @@ class BookingService {
 
         try {
             const ticket = await ticketRepository.create({
-                userId: user.id,
-                showId: show.id,
+                userId: user,
+                showId: show,
                 status: "BOOKED",
                 amount: 1000
             },transaction);

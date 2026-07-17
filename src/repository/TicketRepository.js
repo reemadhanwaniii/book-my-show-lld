@@ -1,9 +1,9 @@
-const ticket = require("../models/ticket");
+const { Ticket }= require("../models");
 const CrudRepository = require("./CrudRepository");
 
 class TicketRepository extends CrudRepository{
     constructor() {
-        super(ticket);
+        super(Ticket);
     }
 }
 
